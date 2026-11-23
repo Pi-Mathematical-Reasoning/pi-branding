@@ -27,8 +27,12 @@ TAGLINE_FONT = ROOT / "fonts" / "IBMPlexMono-SemiBold.ttf"
 INK = (0x0E, 0x0C, 0x0B, 255)
 CREAM = (0xFB, 0xE3, 0xC0, 255)
 TEAL = (0x14, 0x7C, 0x6C, 255)
-# A shade darker than the cream, so the eye's cream sclera stays visible on it.
-PAPER = (0xF0, 0xD4, 0xAC, 255)
+# Graph paper: a cool off-white with a faint green-grey grid. It sets Pi apart
+# from Jaws's warm paper, and the eye's ink outline keeps the cream sclera clear.
+PAPER = (0xE9, 0xEF, 0xEC, 255)
+GRID = (0xC3, 0xD3, 0xD0, 255)
+# The grid's square, in final pixels.
+GRID_STEP = 20
 
 WORDMARK = "Pi"
 TAGLINE = "IRRATIONALLY GOOD AT MATH"
@@ -58,6 +62,17 @@ def paste_centered(canvas: Image.Image, image: Image.Image) -> None:
     canvas.alpha_composite(image, (left, top))
 
 
+def graph_paper(width: int, height: int, step: int, line: int) -> Image.Image:
+    """A sheet of graph paper, with the grid centered so its margins match."""
+    sheet = Image.new("RGBA", (width, height), PAPER)
+    draw = ImageDraw.Draw(sheet)
+    for x in range((width // 2) % step, width, step):
+        draw.rectangle((x - line // 2, 0, x - line // 2 + line - 1, height - 1), fill=GRID)
+    for y in range((height // 2) % step, height, step):
+        draw.rectangle((0, y - line // 2, width - 1, y - line // 2 + line - 1), fill=GRID)
+    return sheet
+
+
 def logo(size: int = 1024, padding: float = 0.04) -> Image.Image:
     """The logo on a transparent square, for places that supply a background."""
     canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
@@ -67,12 +82,13 @@ def logo(size: int = 1024, padding: float = 0.04) -> Image.Image:
 
 
 def avatar(size: int = 1024, padding: float = 0.06) -> Image.Image:
-    """The logo on a solid paper square, for avatars cropped to a circle.
+    """The logo on a graph-paper square, for avatars cropped to a circle.
 
     The eye is about twice as wide as it is tall and its corners are points
     on its horizontal midline, so it stays inside the circle at this width.
+    The grid is coarser than the banner's so it still reads at avatar sizes.
     """
-    canvas = Image.new("RGBA", (size, size), PAPER)
+    canvas = graph_paper(size, size, step=size // 16, line=2)
     inner = round(size * (1 - 2 * padding))
     paste_centered(canvas, fit(trimmed_logo(), inner, inner))
     return canvas.convert("RGB")
@@ -132,11 +148,10 @@ def card(
     radius = (28 if rounded else 0) * s
     draw.rounded_rectangle((0, 0, w - 1, h - 1), radius=radius, fill=INK)
     border = 7 * s
-    draw.rounded_rectangle(
-        (border, border, w - 1 - border, h - 1 - border),
-        radius=max(radius - border, 0),
-        fill=PAPER,
-    )
+    paper_box = (border, border, w - 1 - border, h - 1 - border)
+    paper_mask = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(paper_mask).rounded_rectangle(paper_box, radius=max(radius - border, 0), fill=255)
+    canvas.paste(graph_paper(w, h, step=GRID_STEP * s, line=s), (0, 0), paper_mask)
     inset = 17 * s
     draw.rounded_rectangle(
         (inset, inset, w - 1 - inset, h - 1 - inset),
