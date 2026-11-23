@@ -23,7 +23,7 @@ freely.
 | Asset | Path | Size | Used for |
 |---|---|---|---|
 | Logo | [`assets/logo/pi-logo.png`](assets/logo/pi-logo.png) | 1024 × 1024, transparent | Anywhere that supplies its own background |
-| Avatar | [`assets/avatar/pi-avatar.png`](assets/avatar/pi-avatar.png) | 1024 × 1024, paper background | The `Pi-Mathematical-Reasoning` organization picture, and the logo of `pi-release-bot` |
+| Avatar | [`assets/avatar/pi-avatar.png`](assets/avatar/pi-avatar.png) | 1024 × 1024, graph-paper background | The `Pi-Mathematical-Reasoning` organization picture, and the logo of `pi-release-bot` |
 | README banner | [`assets/banner/pi-readme-banner.png`](assets/banner/pi-readme-banner.png) | 1280 × 320 | The first line of every Pi README, and the organization profile |
 | Social preview | [`assets/social/pi-social-preview.png`](assets/social/pi-social-preview.png) | 1280 × 640, opaque | Each repository's social preview image (Settings → General → Social preview) |
 
@@ -32,9 +32,11 @@ The raw URL of any asset is
 
 The avatar keeps the eye inside the circle GitHub crops avatars to: the eye's
 corners are points on its horizontal midline, so it can run nearly the full
-width. It sits on a paper tone a shade darker than the eye's sclera, so the
-sclera stays visible. When a GitHub App asks for a badge background color,
-use the paper color `#F0D4AC`.
+width. Like the banner and the social preview, it sits on graph paper: a
+cool off-white with a faint grid, which marks Pi as a mathematics project
+and keeps it distinct from the warm paper of other brands. The avatar's grid
+is coarser than the banner's so it still reads at small sizes. When a GitHub
+App asks for a badge background color, use the paper color `#E9EFEC`.
 
 Pi has no website yet, so there are no favicons. They are added here, from
 the same script, when one exists.
@@ -76,14 +78,16 @@ registries, mirrors) shows the header the same way.
 
 ## Palette and type
 
-The colors are sampled from the logo.
+Ink, Cream and Teal are sampled from the logo; Paper and Grid make the graph
+paper behind it.
 
 | Name | Hex | Use |
 |---|---|---|
 | Ink | `#0E0C0B` | The eye's outline, lid and pupil, the wordmark, text |
 | Cream | `#FBE3C0` | The eye's sclera and highlight |
 | Teal | `#147C6C` | The spiral iris; the wordmark's shadow and the banner's rule |
-| Paper | `#F0D4AC` | Backgrounds behind the logo: the banner card, the social preview and the avatar |
+| Paper | `#E9EFEC` | Backgrounds behind the logo: the banner card, the social preview and the avatar |
+| Grid | `#C3D3D0` | The graph-paper grid on Paper |
 
 The wordmark, **Pi**, is set in
 [Abril Fatface](https://fonts.google.com/specimen/Abril+Fatface), a
